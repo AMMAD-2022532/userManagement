@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/home/ivolve/NetBeansProjects/UserManage/src/com/dublin/manage/controller/AdminController.java</file>
+            <file>file:/home/ivolve/NetBeansProjects/UserManage/src/com/dublin/manage/controller/UserController.java</file>
+            <file>file:/home/ivolve/NetBeansProjects/UserManage/src/com/dublin/manage/controller/Controller.java</file>
+            <file>file:/home/ivolve/NetBeansProjects/UserManage/src/com/dublin/manage/controller/AbstractController.java</file>
+            <file>file:/home/ivolve/NetBeansProjects/UserManage/src/com/dublin/manage/helper/Helper.java</file>
+            <file>file:/home/ivolve/NetBeansProjects/UserManage/src/com/dublin/manage/dto/UserOperationDTO.java</file>
+            <file>file:/home/ivolve/NetBeansProjects/UserManage/src/com/dublin/manage/model/UserDetails.java</file>
+            <file>file:/home/ivolve/NetBeansProjects/UserManage/src/com/dublin/manage/helper/AdminTaskHelper.java</file>
+            <file>file:/home/ivolve/NetBeansProjects/UserManage/src/com/dublin/manage/helper/AbstractHelper.java</file>
+            <file>file:/home/ivolve/NetBeansProjects/UserManage/src/com/dublin/manage/view/UserManagement.java</file>
+            <file>file:/home/ivolve/NetBeansProjects/UserManage/src/com/dublin/manage/helper/UserTaskHelper.java</file>
+            <file>file:/home/ivolve/NetBeansProjects/UserManage/src/com/dublin/manage/model/UserOperations.java</file>
+            <file>file:/home/ivolve/NetBeansProjects/UserManage/src/com/dublin/manage/db/DBManager.java</file>
+            <file>file:/home/ivolve/NetBeansProjects/UserManage/src/com/dublin/manage/utility/UtilMethods.java</file>
+        </group>
+    </open-files>
+</project-private>

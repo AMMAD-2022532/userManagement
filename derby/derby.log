@@ -1,0 +1,14 @@
+Thu Dec 14 01:05:57 PKT 2023 : Apache Derby Network Server - 10.13.1.1 - (1765088) started and ready to accept connections on port 1527
+----------------------------------------------------------------
+Thu Dec 14 01:06:00 PKT 2023:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.13.1.1 - (1765088): instance a816c00e-018c-64c9-34df-00006e0201a3 
+on database directory /home/ivolve/NetBeansProjects/UserManage/derby/user_management with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@55054057 
+Loaded from file:/home/ivolve/NetBeansProjects/UserManage/derby/lib/derby.jar
+java.vendor=Ubuntu
+java.runtime.version=11.0.21+9-post-Ubuntu-0ubuntu122.04
+user.dir=/home/ivolve/NetBeansProjects/UserManage/derby
+os.name=Linux
+os.arch=amd64
+os.version=6.2.0-37-generic
+derby.system.home=/home/ivolve/NetBeansProjects/UserManage/derby
+Database Class Loader started - derby.database.classpath=''
