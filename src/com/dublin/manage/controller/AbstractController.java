@@ -5,6 +5,8 @@ import com.dublin.manage.model.UserDetails;
 import com.dublin.manage.utility.UtilMethods;
 
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * AbstractController provides a base implementation for common operations
@@ -12,8 +14,9 @@ import java.util.Scanner;
  */
 public abstract class AbstractController implements Controller {
 
-    Scanner input = new Scanner(System.in);
-    String defaultInput;
+    protected Scanner input = new Scanner(System.in);
+    protected String defaultInput;
+    private static final String PASSWORD_PATTERN = "^(?=.*\\d).{7,}$";
 
     protected AbstractController() {}
 
@@ -25,29 +28,44 @@ public abstract class AbstractController implements Controller {
      */
     @Override
     public UserDetails defaultOperation() throws Exception {
-        System.out.println("1. Login");
-        System.out.println("2. Register");
-        System.out.print("Enter your choice here: ");
+        
+        boolean exit = true;
+        
+        while(exit){
+        
+            System.out.println("\n\n1. Login");
+            System.out.println("2. Register");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice here: ");
 
-        defaultInput = input.next();
+            defaultInput = input.next();
 
-        if (UtilMethods.isDigit(defaultInput)) {
-            int op = Integer.parseInt(defaultInput);
-
-            if (op == 1 || op == 2) {
-                if (op == 1) {
-                    return login();
+            if (UtilMethods.isDigit(defaultInput)) {
+                int op = Integer.parseInt(defaultInput);
+                
+                
+                switch(op){
+                    
+                    case 1:
+                        return login();
+                    case 2:
+                        return register();
+                    case 3:
+                        exit = false;
+                        break;
+                    default:
+                        System.out.println("\n\nInvalid Input");
+                        System.out.println("\nThere are only 2 choices, 1 OR 2");
+                        System.out.println("If you want to end the app please type 3");
                 }
-                if (op == 2) {
-                    return register();
-                }
+                
             } else {
-                System.out.println("Invalid Input");
+                System.out.println("\n\nInvalid Input");
+                System.out.println("The choice can't be non-numeric");
             }
-        } else {
-            System.out.println("Invalid Input");
-        }
 
+        }
+        
         return null;
     }
 
@@ -74,16 +92,33 @@ public abstract class AbstractController implements Controller {
      */
     @Override
     public UserDetails login() throws Exception {
+          
+        boolean exitLogin = true;
+        UserDetails userDetails = null;
         
-        System.out.print("Enter your username: ");
-        String username = input.next();
+        while(exitLogin){
+        
+            System.out.print("Enter your username: ");
+            String username = input.next();
 
-        System.out.print("Enter your password: ");
-        String password = input.next();
+            System.out.print("Enter your password: ");
+            String password = input.next();
+            
+            String usernameValidationResult = validateUsername(username);
+            String passwordValidationResult = validatePassword(password);
+            
+            if(usernameValidationResult != null)
+                System.out.println(usernameValidationResult);
+            else if(passwordValidationResult != null)
+               System.out.println(passwordValidationResult);
+            else
+                userDetails = DBManager.getUserDetailsByCredentials(username, password);
 
-        UserDetails userDetails = DBManager.getUserDetailsByCredentials(username, password);
-
-        return userDetails;
+            return userDetails;
+        
+        }
+        
+        return null;
     }
 
     /**
@@ -95,20 +130,82 @@ public abstract class AbstractController implements Controller {
     @Override
     public UserDetails register() throws Exception {
         UserDetails userDetails = new UserDetails();
+        
+        boolean exitRegister = true;
+        
+        while(exitRegister){
 
-        System.out.print("Enter your name: ");
-        userDetails.setName(input.nextLine());
+            System.out.print("\n\nEnter your name: ");
+            userDetails.setName(input.nextLine());
 
-        System.out.print("Enter your surname: ");
-        userDetails.setSurname(input.nextLine());
+            System.out.print("Enter your surname: ");
+            userDetails.setSurname(input.nextLine());
 
-        System.out.print("Enter your username: ");
-        userDetails.setUsername(input.next());
+            System.out.print("Enter your username: ");
+            userDetails.setUsername(input.next());
 
-        System.out.print("Enter your password: ");
-        userDetails.setPassword(input.next());
-        userDetails.setAdmin(false);
+            System.out.print("Enter your password: ");
+            userDetails.setPassword(input.next());
+            userDetails.setAdmin(false);
+            
+            String validationResult = validateUserRegistration(userDetails);
+            
+            if(!validationResult.equals("success")){
+                System.out.println("\n\n"+validationResult);
+            }else{
+               return DBManager.addUserDetails(userDetails);
+            }
 
-        return DBManager.addUserDetails(userDetails);
+        }
+        
+        return null;
+    }
+    
+    private String validateUserRegistration(UserDetails userDetails){
+            
+        if(userDetails.getName() == null || 
+                userDetails.getName().equals(""))
+            return "Name can't be empty";
+        else if(UtilMethods.isDigit(userDetails.getName()))
+          return "Name can't be a number";
+
+        else if(userDetails.getSurname() == null || 
+                userDetails.getSurname().equals(""))
+            return "Surname can't be empty";
+        else if(UtilMethods.isDigit(userDetails.getSurname()))
+          return "Surname can't be a number";
+
+        else if(userDetails.getUsername() == null || 
+                userDetails.getUsername().equals(""))
+            return "Username can't be empty";
+        else if(UtilMethods.isDigit(userDetails.getUsername()))
+          return "Username can't be a number";
+
+        else if(validatePassword(userDetails.getPassword()) != null)
+            return "Password must be at least 7 characters long and "
+                    + "Password must contain at least one number.";
+
+        return "success";
+       
+    }
+    
+    private String validatePassword(String password){
+        Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
+        Matcher matcher = pattern.matcher(password);
+        
+        if(matcher.matches())
+            return "Password must be at least 7 characters long and "
+                + "Password must contain at least one number.";
+        return null;
+    }
+    
+    private String validateUsername(String username){
+        if(username == null || 
+                username.equals(""))
+            return "Username can't be empty";
+        else if(UtilMethods.isDigit(username))
+          return "Username can't be a number";
+         
+        return null; 
     }
 }

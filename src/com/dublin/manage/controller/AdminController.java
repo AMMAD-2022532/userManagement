@@ -23,7 +23,7 @@ public class AdminController extends AbstractController {
         System.out.println("2. List of users");
         System.out.println("3. Remove a user");
         System.out.println("4. Review the user's operations");
-        System.out.print("Please enter your input here: ");
+        System.out.print("\n\nPlease enter your input here: ");
         String op = input.next();
 
         if (UtilMethods.isDigit(op)) {

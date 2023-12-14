@@ -28,12 +28,14 @@ public class UserManagement {
         Controller controller = new AdminController();
         UserDetails validatedUserDetails = controller.defaultOperation();
         
-        if(validatedUserDetails.isAdmin()){
+        
+        if(validatedUserDetails != null && validatedUserDetails.isAdmin()){
             
+            controller.BasicOperation(validatedUserDetails.getId());
             
-            
-        }else{
             
         }
+        
+        //validation checking of login and registration
     }
 }
