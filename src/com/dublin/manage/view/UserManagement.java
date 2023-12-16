@@ -35,7 +35,5 @@ public class UserManagement {
             
             
         }
-        
-        //validation checking of login and registration
     }
 }

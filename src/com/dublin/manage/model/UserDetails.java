@@ -86,19 +86,9 @@ public class UserDetails {
      * @return True if the username is set successfully, false otherwise.
      */
 
-    public boolean setUsername(String username) {
+    public void setUsername(String username) {
         
-        try{
-        if(DBManager.isUsernameExists(username)){
-            this.username = username;
-            return true;
-        }
-        
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        
-        return false;
+       this.username = username;
     }
 
     public String getPassword() {
@@ -106,7 +96,7 @@ public class UserDetails {
     }
 
     public void setPassword(String password) {
-        this.password = hashPassword(password);
+        this.password = password;
     }
 
     public boolean isAdmin() {

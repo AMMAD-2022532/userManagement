@@ -88,7 +88,7 @@ public class DBManager {
             stmt.setString(1,userDetails.getName());
             stmt.setString(2,userDetails.getSurname());
             stmt.setString(3,userDetails.getUsername());
-            stmt.setString(4,userDetails.getPassword());
+            stmt.setString(4,UserDetails.getHashPassword(userDetails.getPassword()));
             stmt.setBoolean(5,userDetails.isAdmin());
             
             int i = stmt.executeUpdate();

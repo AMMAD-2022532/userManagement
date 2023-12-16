@@ -98,23 +98,18 @@ public abstract class AbstractController implements Controller {
         
         while(exitLogin){
         
-            System.out.print("Enter your username: ");
+            System.out.print("\n\nEnter your username: ");
             String username = input.next();
 
             System.out.print("Enter your password: ");
             String password = input.next();
             
-            String usernameValidationResult = validateUsername(username);
-            String passwordValidationResult = validatePassword(password);
-            
-            if(usernameValidationResult != null)
-                System.out.println(usernameValidationResult);
-            else if(passwordValidationResult != null)
-               System.out.println(passwordValidationResult);
-            else
-                userDetails = DBManager.getUserDetailsByCredentials(username, password);
+           
+            userDetails = DBManager.getUserDetailsByCredentials(username, password);
 
-            return userDetails;
+            if(userDetails != null)
+                return userDetails;
+            else System.out.println("\n\nInvalid username or password");
         
         }
         
@@ -133,19 +128,26 @@ public abstract class AbstractController implements Controller {
         
         boolean exitRegister = true;
         
+        boolean fromChoice = true;
+        
         while(exitRegister){
 
             System.out.print("\n\nEnter your name: ");
+            if(fromChoice){
+                input.nextLine();
+                fromChoice = !fromChoice;
+            }    
             userDetails.setName(input.nextLine());
 
             System.out.print("Enter your surname: ");
             userDetails.setSurname(input.nextLine());
 
             System.out.print("Enter your username: ");
-            userDetails.setUsername(input.next());
+            userDetails.setUsername(input.nextLine());
 
             System.out.print("Enter your password: ");
-            userDetails.setPassword(input.next());
+            userDetails.setPassword(input.nextLine());
+            
             userDetails.setAdmin(false);
             
             String validationResult = validateUserRegistration(userDetails);
@@ -161,7 +163,7 @@ public abstract class AbstractController implements Controller {
         return null;
     }
     
-    private String validateUserRegistration(UserDetails userDetails){
+    private String validateUserRegistration(UserDetails userDetails)throws Exception{
             
         if(userDetails.getName() == null || 
                 userDetails.getName().equals(""))
@@ -180,10 +182,16 @@ public abstract class AbstractController implements Controller {
             return "Username can't be empty";
         else if(UtilMethods.isDigit(userDetails.getUsername()))
           return "Username can't be a number";
+        else if(userDetails.getUsername().contains(" "))
+          return "username can't have space";
+        else if(DBManager.isUsernameExists(userDetails.getUsername()))
+          return "username already exists";
 
         else if(validatePassword(userDetails.getPassword()) != null)
             return "Password must be at least 7 characters long and "
                     + "Password must contain at least one number.";
+         else if(userDetails.getUsername().contains(" "))
+          return "username can't have space"; 
 
         return "success";
        
@@ -193,7 +201,7 @@ public abstract class AbstractController implements Controller {
         Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
         Matcher matcher = pattern.matcher(password);
         
-        if(matcher.matches())
+        if(!matcher.matches())
             return "Password must be at least 7 characters long and "
                 + "Password must contain at least one number.";
         return null;
