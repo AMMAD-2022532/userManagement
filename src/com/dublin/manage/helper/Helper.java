@@ -48,4 +48,10 @@ public interface Helper {
      * @throws Exception if a database access error occurs.
      */
     public boolean addOperation(int userId) throws Exception;
+    
+    /**
+     * Print details of non-admin users.
+     * @throws Exception if a database access error occurs.
+     */
+    public void printUserDetails() throws Exception;
 }

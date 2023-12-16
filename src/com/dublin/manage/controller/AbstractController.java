@@ -29,9 +29,9 @@ public abstract class AbstractController implements Controller {
     @Override
     public UserDetails defaultOperation() throws Exception {
         
-        boolean exit = true;
+        boolean exit = false;
         
-        while(exit){
+        while(!exit){
         
             System.out.println("\n\n1. Login");
             System.out.println("2. Register");
@@ -51,7 +51,8 @@ public abstract class AbstractController implements Controller {
                     case 2:
                         return register();
                     case 3:
-                        exit = false;
+                        exit = true;
+                        
                         break;
                     default:
                         System.out.println("\n\nInvalid Input");
@@ -93,16 +94,24 @@ public abstract class AbstractController implements Controller {
     @Override
     public UserDetails login() throws Exception {
           
-        boolean exitLogin = true;
+        boolean exitLogin = false;
         UserDetails userDetails = null;
         
-        while(exitLogin){
+        while(!exitLogin){
+            
+            System.out.print("\n\nTo exit enter '0'");
         
             System.out.print("\n\nEnter your username: ");
             String username = input.next();
+            
+            if(username.equals("0"))
+                break;
 
             System.out.print("Enter your password: ");
             String password = input.next();
+            
+            if(password.equals("0"))
+                break;
             
            
             userDetails = DBManager.getUserDetailsByCredentials(username, password);

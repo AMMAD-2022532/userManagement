@@ -46,7 +46,7 @@ public class DBManager {
      */
     public static boolean createUserDetailsTable() throws SQLException {
         // SQL query to create the USER_DETAILS table
-        String createTableQuery = "CREATE TABLE APP.USER_DETAILS (" +
+        String createTableQuery = "CREATE TABLE USER_DETAILS (" +
                 "id INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY, " +
                 "name VARCHAR(255), " +
                 "surname VARCHAR(255), " +
@@ -80,7 +80,7 @@ public class DBManager {
      */
     public static UserDetails addUserDetails(UserDetails userDetails)throws Exception{
         
-        String query = "INSERT INTO APP.USER_DETAILS(name, surname, username, password, admin) values(?,?,?,?,?)";
+        String query = "INSERT INTO USER_DETAILS(name, surname, username, password, admin) values(?,?,?,?,?)";
         PreparedStatement stmt = null;
         try{
             stmt = conn.prepareStatement(query);
@@ -110,7 +110,7 @@ public class DBManager {
  */
     public static UserDetails retrieveAdminUserDetails() throws SQLException {
         // SQL query to select user details for administrators
-        String query = "SELECT * FROM APP.USER_DETAILS WHERE admin = ?";
+        String query = "SELECT * FROM USER_DETAILS WHERE admin = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             // Set the parameter for the WHERE clause (admin = true)
@@ -154,7 +154,7 @@ public class DBManager {
      */
     public static int deleteAdminUsers() throws SQLException {
         // SQL query to delete admin users
-        String query = "DELETE FROM APP.USER_DETAILS WHERE admin = ?";
+        String query = "DELETE FROM USER_DETAILS WHERE admin = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             // Set the parameter for the WHERE clause (admin = true)
@@ -174,7 +174,7 @@ public class DBManager {
      */
     public static boolean hasAdminUser() throws SQLException {
         // SQL query to check if there is at least one admin user
-        String query = "SELECT 1 FROM APP.USER_DETAILS WHERE admin = ?";
+        String query = "SELECT 1 FROM USER_DETAILS WHERE admin = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             // Set the parameter for the WHERE clause (admin = true)
@@ -199,7 +199,7 @@ public class DBManager {
      */
     public static UserDetails getUserDetailsByCredentials(String username, String password) throws SQLException {
         // SQL query to check if there is a matching user
-        String query = "SELECT * FROM APP.USER_DETAILS WHERE username = ?";
+        String query = "SELECT * FROM USER_DETAILS WHERE username = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             // Set parameters for the WHERE clause
@@ -238,7 +238,7 @@ public class DBManager {
      */
     public static boolean deleteTable(String tableName) throws SQLException {
         // SQL query to delete the entire table
-        String query = "DROP TABLE APP." + tableName;
+        String query = "DROP TABLE " + tableName;
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             // Execute the drop table operation
@@ -258,7 +258,7 @@ public class DBManager {
      */
     public static boolean isUsernameExists(String username) throws SQLException {
         // SQL query to check if the username exists
-        String query = "SELECT 1 FROM APP.USER_DETAILS WHERE username = ?";
+        String query = "SELECT 1 FROM USER_DETAILS WHERE username = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             // Set the parameter for the WHERE clause
@@ -283,7 +283,7 @@ public class DBManager {
      */
     public static UserDetails getUserDetailsById(int userId) throws SQLException {
         // SQL query to retrieve user details by ID
-        String query = "SELECT * FROM APP.USER_DETAILS WHERE id = ?";
+        String query = "SELECT * FROM USER_DETAILS WHERE id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             // Set parameter for the WHERE clause
@@ -297,10 +297,11 @@ public class DBManager {
                     String name = resultSet.getString("name");
                     String surname = resultSet.getString("surname");
                     String username = resultSet.getString("username");
-                    boolean isAdmin = resultSet.getBoolean("is_admin");
+                    String password = resultSet.getString("password");
+                    boolean isAdmin = resultSet.getBoolean("admin");
 
                     // Create and return a UserDetails object for the matching user
-                    return new UserDetails(userId, name, surname, username, null, isAdmin);
+                    return new UserDetails(userId, name, surname, username, password, isAdmin);
                 } else {
                     // No matching user found
                     return null;
@@ -318,7 +319,7 @@ public class DBManager {
      */
     public static boolean updateUserDetails(UserDetails userDetails) throws SQLException {
         // SQL query to update user details by ID
-        String query = "UPDATE APP.USER_DETAILS SET name=?, surname=?, username=?, password=?, admin=? WHERE id=?";
+        String query = "UPDATE USER_DETAILS SET name=?, surname=?, username=?, password=? WHERE id=?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             // Set parameters for the UPDATE statement
@@ -326,6 +327,7 @@ public class DBManager {
             stmt.setString(2, userDetails.getSurname());
             stmt.setString(3, userDetails.getUsername());
             stmt.setString(4, userDetails.getPassword());
+            stmt.setInt(5, userDetails.getId());
 
             // Execute the update
             int rowsUpdated = stmt.executeUpdate();
@@ -343,7 +345,7 @@ public class DBManager {
      */
     public static List<UserDetails> getNonAdminUsers() throws SQLException {
         // SQL query to retrieve non-admin users
-        String query = "SELECT * FROM APP.USER_DETAILS WHERE is_admin = ?";
+        String query = "SELECT * FROM USER_DETAILS WHERE admin = ?";
 
         // List to store non-admin users
         List<UserDetails> nonAdminUsers = new ArrayList<>();
@@ -387,7 +389,7 @@ public class DBManager {
      */
     public static boolean deleteUserById(int userId) throws SQLException {
         // SQL query to delete a user by ID
-        String query = "DELETE FROM APP.USER_DETAILS WHERE id = ?";
+        String query = "DELETE FROM USER_DETAILS WHERE id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             // Set parameter for the WHERE clause
@@ -409,7 +411,7 @@ public class DBManager {
      */
     public static boolean createUserOperationsTable() throws SQLException {
         // SQL query to create USER_OPERATIONS table with user_operation as CLOB
-        String query = "CREATE TABLE APP.USER_OPERATIONS ("
+        String query = "CREATE TABLE USER_OPERATIONS ("
                 + "user_operation_id INT PRIMARY KEY,"
                 + "user_operation CLOB,"
                 + "user_detail_id INT,"
@@ -435,13 +437,16 @@ public class DBManager {
         List<UserOperationDTO> userOperationsList = new ArrayList<>();
 
         // SQL query to select data from USER_OPERATIONS table
-        String query = "SELECT uo.id AS user_operation_id, "
-                     + "uo.user_detail_id, "
-                     + "ud.name, "
-                     + "ud.surname, "
-                     + "uo.user_operation "
-                     + "FROM USER_OPERATIONS uo "
-                     + "JOIN USER_DETAILS ud ON uo.user_detail_id = ud.id";
+       String query = "SELECT\n" +
+                        "    id AS user_operation_id,\n" +
+                        "    user_detail_id,\n" +
+                        "    name,\n" +
+                        "    surname,\n" +
+                        "    user_operation\n" +
+                        "FROM\n" +
+                        "    USER_OPERATIONS, USER_DETAILS\n" +
+                        "WHERE\n" +
+                        "    user_detail_id = id";
 
         try (PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet resultSet = stmt.executeQuery()) {

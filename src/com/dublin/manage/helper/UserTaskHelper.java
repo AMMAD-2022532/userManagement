@@ -51,4 +51,9 @@ public class UserTaskHelper extends AbstractHelper {
     }
 
     // Additional methods for calculating USC and PRSI can be added if needed
+
+    @Override
+    public void printUserDetails() throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

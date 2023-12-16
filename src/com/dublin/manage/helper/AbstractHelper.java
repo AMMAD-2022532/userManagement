@@ -36,75 +36,77 @@ public abstract class AbstractHelper implements Helper {
      * @throws Exception if a database access error occurs.
      */
     public boolean updateUserDetails(int userId) throws Exception {
-        // Display options for modification
-        System.out.println("What you want to modify: ");
-        System.out.println("1. Name");
-        System.out.println("2. Surname");
-        System.out.println("3. Username");
-        System.out.println("4. Password");
-        System.out.print("Please enter your input here: ");
         
-        // Retrieve user details from the database
-        UserDetails userDetailsFromDB = DBManager.getUserDetailsById(userId);
-        UserDetails userDetails = new UserDetails(userDetailsFromDB);
-       
-        // Read user input for modification
-        String whatToModify = input.next();
+        boolean exit = false;
         
-        if (UtilMethods.isDigit(whatToModify)) {
-            int whatToModifyNum = Integer.parseInt(whatToModify);
+        while(!exit){
+        
+             // Retrieve user details from the database
+            UserDetails userDetailsFromDB = DBManager.getUserDetailsById(userId);
+            UserDetails userDetails = new UserDetails(userDetailsFromDB);
+
+            System.out.println("Here is your current record: \n"+
+                    "ID: " + userDetails.getId() + "\n" +
+                    "Name: " + userDetails.getName() + "\n" +
+                    "Surname: " + userDetails.getSurname() + "\n" +
+                    "Username: " + userDetails.getUsername() + "\n"
+            );
             
-            if (whatToModifyNum > 0 && whatToModifyNum < 5) {
-                // Modify the corresponding field based on user input
-                switch (whatToModifyNum) {
-                    case 1:
-                        userDetails.setName(input.nextLine());
-                        break;
-                    case 2:
-                        userDetails.setSurname(input.next());
-                        break;
-                    case 3:
-                        userDetails.setUsername(input.next());
-                        break;
-                    case 4:
-                        userDetails.setPassword(input.next());
-                        break;
+            // Display options for modification
+            System.out.println("\n\nWhat you want to modify: ");
+            System.out.println("\n1. Name");
+            System.out.println("2. Surname");
+            System.out.println("3. Username");
+            System.out.println("4. Password");
+            System.out.println("5. Exit");
+            System.out.print("Please enter your input here: ");
+            
+            // Read user input for modification
+            String whatToModify = input.next();
+
+            if (UtilMethods.isDigit(whatToModify)) {
+                int whatToModifyNum = Integer.parseInt(whatToModify);
+
+                if (whatToModifyNum > 0 && whatToModifyNum < 5) {
+                    // Modify the corresponding field based on user input
+                    switch (whatToModifyNum) {
+                        case 1:
+                            input.nextLine();
+                            System.out.print("Enter your name: ");
+                            userDetails.setName(input.nextLine());
+                            break;
+                        case 2:
+                            System.out.print("Enter your Surname: ");
+                            userDetails.setSurname(input.next());
+                            break;
+                        case 3:
+                            System.out.print("Enter your username: ");
+                            userDetails.setUsername(input.next());
+                            break;
+                        case 4:
+                            System.out.print("Enter your password: ");
+                            userDetails.setPassword(input.next());
+                    }
+                }
+                else if(whatToModifyNum == 5){
+                 break;   
+                }else {
+                    System.out.println("\nInvalid Input");
                 }
             } else {
-                System.out.println("Invalid Input");
+                System.out.println("\nInvalid Input");
             }
-        } else {
-            System.out.println("Invalid Input");
-        }
-     
-        // Check if any changes were made before attempting an update
-        if (!userDetails.equals(userDetailsFromDB)) {
-            // Update user details in the database
-            return DBManager.updateUserDetails(userDetails);
-        } else {
-            return false; // No changes were made
-        }
-    }
-    
-    /**
-     * Print details of non-admin users.
-     * @throws Exception if a database access error occurs.
-     */
-    protected void printUserDetails() throws Exception {
-        // Retrieve details of non-admin users from the database
-        List<UserDetails> userDetails = DBManager.getNonAdminUsers();
-        int count = 1;
 
-        // Print details for each non-admin user
-        for (UserDetails userDetail : userDetails) {
-            System.out.println("\n" + count + ". User: ");
-            System.out.println("User ID: " + userDetail.getId());
-            System.out.println("Name: " + userDetail.getName());
-            System.out.println("Surname: " + userDetail.getSurname());
-            System.out.println("Username: " + userDetail.getUsername());
-            System.out.println("Password: " + userDetail.getPassword());
-           
-            count++;
+            // Check if any changes were made before attempting an update
+            if (!userDetails.equals(userDetailsFromDB)) {
+                // Update user details in the database
+                return DBManager.updateUserDetails(userDetails);
+            }
+            
+            System.out.println("User info updated successfully!");
         }
+        
+        return false;
     }
+
 }

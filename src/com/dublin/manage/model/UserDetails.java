@@ -26,7 +26,7 @@ public class UserDetails {
         this.name = name;
         this.surname = surname;
         this.username = username;
-        this.password = hashPassword(password);
+        this.password = password;
         this.admin = admin;
     }
 
@@ -35,7 +35,7 @@ public class UserDetails {
         this.name = name;
         this.surname = surname;
         this.username = username;
-        this.password = hashPassword(password);
+        this.password = password;
         this.admin = admin;
     }
 

@@ -42,8 +42,8 @@ public class AdminTaskHelper extends AbstractHelper {
      */
     @Override
     public void listUserOperations() throws Exception {
-        // Display user details for selection
-        printUserDetails();
+//        // Display user details for selection
+//        printUserDetails();
 
         // Get user input for the user ID to list operations
         System.out.print("\nEnter User ID to list its operations: ");
@@ -79,5 +79,28 @@ public class AdminTaskHelper extends AbstractHelper {
     @Override
     public boolean addOperation(int userId) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); // Placeholder for the method body
+    }
+    
+       
+    /**
+     * Print details of non-admin users.
+     * @throws Exception if a database access error occurs.
+     */
+    public void printUserDetails() throws Exception {
+        // Retrieve details of non-admin users from the database
+        List<UserDetails> userDetails = DBManager.getNonAdminUsers();
+        int count = 1;
+
+        // Print details for each non-admin user
+        for (UserDetails userDetail : userDetails) {
+            System.out.println("\n" + count + ". User: ");
+            System.out.println("User ID: " + userDetail.getId());
+            System.out.println("Name: " + userDetail.getName());
+            System.out.println("Surname: " + userDetail.getSurname());
+            System.out.println("Username: " + userDetail.getUsername());
+            System.out.println("Password: " + userDetail.getPassword());
+           
+            count++;
+        }
     }
 }

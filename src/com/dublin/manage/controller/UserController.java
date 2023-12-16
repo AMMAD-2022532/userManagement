@@ -22,26 +22,35 @@ public class UserController extends AbstractController {
      */
     @Override
     public int BasicOperation(int userId) throws Exception {
-        System.out.println("1. Modify Profile");
-        System.out.println("2. Add an operation");
-        System.out.print("Please enter your input here: ");
-        String op = input.next();
+        
+        boolean exit = false;
+        
+        while(!exit){
+        
+                System.out.println("\n\n1. Modify Profile");
+                System.out.println("2. Add an operation");
+                System.out.println("3. exit");
+                System.out.print("Please enter your input here: ");
+                String op = input.next();
 
-        if (UtilMethods.isDigit(op)) {
+                if (UtilMethods.isDigit(op)) {
 
-            int opNum = Integer.parseInt(op);
+                    int opNum = Integer.parseInt(op);
 
-            if (opNum > 0 && opNum < 3) {
-                return opNum;
-            } else {
-                System.out.println("Invalid input");
-                return 0;
-            }
+                    if (opNum > 0 && opNum < 3) {
+                        return opNum;
+                    }else if(opNum == 3){
+                        break;
+                    } else {
+                        System.out.println("Invalid input");
+                    }
 
-        } else {
-            System.out.println("Invalid input");
-            return 0;
+                } else {
+                    System.out.println("Invalid input");
+                }
         }
+        
+        return 0;
     }
 
     /**
@@ -53,7 +62,7 @@ public class UserController extends AbstractController {
      * @throws Exception if an error occurs during the task operation
      */
     @Override
-    public void taskOperation(int task, int userId) throws Exception {
+    public boolean taskOperation(int task, int userId) throws Exception {
         Helper userTaskHelper = new UserTaskHelper();
 
         switch (task) {
@@ -67,5 +76,7 @@ public class UserController extends AbstractController {
                 userTaskHelper.addOperation(userId);
                 break;
         }
+        
+        return false;
     }
 }

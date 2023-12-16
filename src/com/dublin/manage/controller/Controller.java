@@ -33,7 +33,7 @@ public interface Controller {
      * @param userId user identifier
      * @throws Exception if an error occurs during the task operation
      */
-    public void taskOperation(int task, int userId) throws Exception;
+    public boolean taskOperation(int task, int userId) throws Exception;
 
     /**
      * Registers a new user and returns the user details.
